@@ -22,7 +22,7 @@ public class GooglePlacesService {
     private final ObjectMapper objectMapper;
     private final String googleApiKey;
 
-    public GooglePlacesService(@Value("${google.places.api.key:}") String googleApiKey,
+    public GooglePlacesService(@Value("${saas.google.api-key:}") String googleApiKey,
                                WebClient.Builder webClientBuilder,
                                ObjectMapper objectMapper) {
         this.googleApiKey = googleApiKey;
