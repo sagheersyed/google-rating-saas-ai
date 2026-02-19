@@ -1,7 +1,6 @@
 package com.google.rating.saas_ai.handler;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.rating.saas_ai.entity.Business;
 import com.google.rating.saas_ai.entity.Review;
 import com.google.rating.saas_ai.repository.ReviewRepository;
@@ -20,7 +19,6 @@ public class GoogleReviewsWebhookHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(GoogleReviewsWebhookHandler.class);
 
-    private final ObjectMapper objectMapper;
     private final BusinessService businessService;
     private final ReviewService reviewService;
     private final ReviewRepository reviewRepository;
@@ -29,12 +27,10 @@ public class GoogleReviewsWebhookHandler {
     @Value("${webhook.secret:defaultSecret}")
     private String webhookSecret;
 
-    public GoogleReviewsWebhookHandler(ObjectMapper objectMapper,
-                                       BusinessService businessService,
+    public GoogleReviewsWebhookHandler(BusinessService businessService,
                                        ReviewService reviewService,
                                        ReviewRepository reviewRepository,
                                        ValidationUtil validationUtil) {
-        this.objectMapper = objectMapper;
         this.businessService = businessService;
         this.reviewService = reviewService;
         this.reviewRepository = reviewRepository;
@@ -75,7 +71,6 @@ public class GoogleReviewsWebhookHandler {
                 return;
             }
 
-            String reviewerName = reviewNode.path("reviewer").path("displayName").asText();
             if (reviewNode.path("rating").isMissingNode() || !reviewNode.path("rating").isNumber()) {
                 logger.warn("Rating is missing or invalid in review: {}", googleReviewId);
                 return;
@@ -135,8 +130,8 @@ public class GoogleReviewsWebhookHandler {
 
             // Process the review and generate AI response
             try {
-                Review processedReview = reviewService.processReview(review, business.getId());
-                logger.info("Successfully processed Google review for business: {}", business.getBusinessName());
+                reviewService.processGoogleReview(review, business.getId());
+                logger.info("Successfully processed and replied to Google review for business: {}", business.getBusinessName());
             } catch (Exception e) {
                 logger.error("Error processing review for business {}: {}", business.getBusinessName(), e.getMessage());
             }

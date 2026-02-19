@@ -13,13 +13,20 @@ public class ReviewService {
     private final AiReplyService aiService;
     private final BusinessService businessService;
     private final EmailNotificationService emailNotificationService;
+    private final GooglePlacesService googlePlacesService;
     private final ValidationUtil validationUtil;
 
-    public ReviewService(ReviewRepository reviewRepo, AiReplyService aiService, BusinessService businessService, EmailNotificationService emailNotificationService, ValidationUtil validationUtil) {
+    public ReviewService(ReviewRepository reviewRepo,
+                         AiReplyService aiService,
+                         BusinessService businessService,
+                         EmailNotificationService emailNotificationService,
+                         GooglePlacesService googlePlacesService,
+                         ValidationUtil validationUtil) {
         this.reviewRepo = reviewRepo;
         this.aiService = aiService;
         this.businessService = businessService;
         this.emailNotificationService = emailNotificationService;
+        this.googlePlacesService = googlePlacesService;
         this.validationUtil = validationUtil;
     }
 
@@ -51,6 +58,17 @@ public class ReviewService {
         // Send email notification to business owner
         emailNotificationService.sendReviewResponseNotification(business, savedReview);
 
+        return savedReview;
+    }
+
+    public Review processGoogleReview(Review review, Long businessId) {
+        Review savedReview = processReview(review, businessId);
+
+        if (savedReview.getGoogleReviewId() == null || savedReview.getGoogleReviewId().isBlank()) {
+            throw new IllegalArgumentException("Google review ID is required to post a reply");
+        }
+
+        googlePlacesService.replyToReview(savedReview.getGoogleReviewId(), savedReview.getAiReply());
         return savedReview;
     }
 
