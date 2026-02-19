@@ -1,0 +1,41 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ai_saas
+    username: postgres
+    password: Avanza@333
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  ai:
+    ollama:
+      api-key: ${OLLAMA_API_KEY:}
+      endpoint: http://localhost:11434
+      model: llama3:8b
+  mail:
+    host: ${MAIL_HOST:}
+    port: ${MAIL_PORT:}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${OAUTH_JWK_SET_URI:}
+saas:
+  google:
+    enabled: ${GOOGLE_PLACES_ENABLED:false}
+    api-key: ${GOOGLE_PLACES_API_KEY:}
+  webhook:
+    secret: ${WEBHOOK_SECRET:}
+  subscription:
+    auto-renew-enabled: true
+    renewal-reminder-days: 3
+    trial-period-days: 7
