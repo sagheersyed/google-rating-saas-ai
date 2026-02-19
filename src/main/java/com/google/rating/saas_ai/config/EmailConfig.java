@@ -15,10 +15,10 @@ public class EmailConfig {
     private Integer smtpPort = 587; // default
 
     @Email(message = "From email must be a valid email address")
-    private String fromEmail = "sagheersyed333@gmail.com"; // dev default
+    private String fromEmail;
 
-    private String username = "sagheersyed333@gmail.com"; // dev default
-    private String password = "uspmoanufgjtjemj"; // dev default
+    private String username;
+    private String password;
 
     private boolean enableTls = true;
 

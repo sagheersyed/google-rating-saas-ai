@@ -26,7 +26,7 @@ public class GoogleReviewsWebhookHandler {
     private final ReviewRepository reviewRepository;
     private final ValidationUtil validationUtil;
 
-    @Value("${webhook.secret:defaultSecret}")
+    @Value("${saas.webhook.secret:}")
     private String webhookSecret;
 
     public GoogleReviewsWebhookHandler(ObjectMapper objectMapper,
